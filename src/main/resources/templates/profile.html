@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+	
+<nav th:replace="layout :: header"></nav>	
+	
+<div id="main" class="container">
+
+	<!-- DESCRIPTION -->
+	<div class="row">
+		<div class="col-sm-4">
+			<img th:src="${user.avatar}" class="profile-avatar img-circle img-responsive center-block" />
+		</div>
+		<div class="col-sm-8">
+			<div class="row">
+				<!-- My profile -->
+				<ul th:if="${user.id == #authentication.principal.user.id}" class="list-inline">
+					<li>
+						<h1 th:text="${user.fullname}"></h1>
+					</li>
+					
+					<li>
+					  <a th:href="@{/upload/image}" class="btn btn-primary">
+					  	Chia sẻ ảnh
+					  </a>
+					</li>
+					
+					<li>
+					  <a th:href="@{/upload/video}" class="btn btn-danger">
+					  	Chia sẻ video
+					  </a>
+					</li>
+					
+					<li>
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						    Quản lý tài khoản <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+						    <li><a th:href="@{/user/change-profile}">Cập nhật thông tin cá nhân</a></li>
+						    <li><a th:href="@{/user/change-avatar}">Cập nhật ảnh đại diện</a></li>
+						    <li><a th:href="@{/logout}">Đăng xuất</a></li>
+						  </ul>
+						</div>
+					</li>
+				</ul>
+				
+				<!-- Someone profile -->
+				<ul th:unless="${user.id == #authentication.principal.user.id}" class="list-inline">
+					<li>
+						<h1 th:text="${user.fullname}"></h1>
+					</li>
+					
+					<li th:if="${isFollowing} == true" id="following">
+					  <a href="#" id="unfollow" class="btn btn-default">Đang theo dõi</a>
+					</li>
+					
+					<li th:if="${isFollowing} == false" id="following">
+					  <a href="#" id="follow" class="btn btn-primary">Theo dõi</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="row">
+				<ul class="list-inline stats">
+					<li>
+						<p><strong th:text="${countPosts}"></strong> bài viết</p>
+					</li>
+					<li>
+						<p>
+							<a href="#" th:text="${#lists.size(user.followers)}" id="followers" 
+								data-toggle="modal" data-target="#followersModal"></a> người theo dõi
+						</p>
+					</li>
+					<li>
+						<p>
+							Đang theo dõi <a href="#" th:text="${#lists.size(user.followings)}" id="followings"
+								data-toggle="modal" data-target="#followingsModal"></a> người dùng
+						</p>
+					</li>
+				</ul>
+				
+				<!-- Modals -->
+				<div id="followersModal" class="modal fade" role="dialog">
+				  <div class="modal-dialog">
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title" th:inline="text">Danh sách người đang theo dõi [[${user.fullname}]]</h4>
+				      </div>
+				      <div class="modal-body">
+				        <ul class="list-group">
+					    	<li th:each="follower : ${user.followers}" class="list-group-item">
+					    		<img th:src="${follower.avatar}" class="img-circle img-responsive search-avatar" />
+				    			<a th:href="@{/user/{username}(username=${follower.username})}" th:text="${follower.fullname}"></a>
+					    	</li>
+					  	</ul>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
+				<div id="followingsModal" class="modal fade" role="dialog">
+				  <div class="modal-dialog">
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title" th:inline="text">Danh sách người [[${user.fullname}]] đang theo dõi </h4>
+				      </div>
+				      <div class="modal-body">
+				        <ul class="list-group">
+					    	<li th:each="following : ${user.followings}" class="list-group-item">
+					    		<img th:src="${following.avatar}" class="img-circle img-responsive search-avatar" />
+				    			<a th:href="@{/user/{username}(username=${following.username})}" th:text="${following.fullname}"></a>
+					    	</li>
+					  	</ul>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- POSTS -->
+	<div th:if="${countPosts == 0}" class="row" style="margin-top:20px;">
+		<h4 class="text-center">Người dùng này chưa có bài viết nào</h4>
+	</div>
+	
+	<div th:unless="${countPosts == 0}" class="row" style="margin-top:20px;">
+		<div id="posts">
+			<div th:each="post : ${posts}" th:id="'post' + ${post.id}" class="col-sm-4">
+				<div th:if="${post.type == 'image'}" class="thumbnail">
+					<img th:src="${post.url}" />
+					<div class="caption">
+						<p class="pull-left">
+							<span th:text="${#lists.size(post.likes)}"></span> <i class="fa fa-heart-o"></i>
+							<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+						</p>
+						<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right" title="Xem">
+							<i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+				
+				<div th:if="${post.type == 'video'}" class="thumbnail">
+					<iframe th:src="${post.url}" width="100%" height="250px"></iframe>
+					<div class="caption">
+						<p class="pull-left">
+							<span th:text="${#lists.size(post.likes)}"></span> <i class="fa fa-heart-o"></i>
+							<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+						</p>
+						<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right" title="Xem">
+							<i class="fa fa-arrow-circle-right"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="load-more" class="col-sm-12 text-center">
+			<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
+			<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
+		</div>
+	</div>
+	
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function() {
+	
+	/* ================ Load more posts ================ */
+	
+	var page = 0;
+	
+	$('#loading-gif').hide();
+
+	$('#btn-load').click(function(e) {
+      e.preventDefault();
+      page++;
+      loadMorePosts(page);
+    });
+	
+    function loadMorePosts(page) {
+    	$('#loading-gif').show(); 
+    	$('#btn-load').hide(); 
+
+    	var data = {
+   			userId: [[${user.id}]], 
+   			page: page
+    	};
+    	
+    	$.ajax({
+    		type: 'GET',
+	        url: '/user/more',
+	        data: data,
+	        
+	        success: function(res) {
+	        	if (res.search('post') === -1) { // No more posts
+	        		$('#load-more').remove();
+	        	} else {
+	        		$('#posts').append(res);
+					$('#loading-gif').hide(); 
+					$('#btn-load').show(); 
+	        	}
+	        },
+	        
+	        error: function(res) {
+	          console.log('ERR:' + res);
+	        }
+      	});
+    }
+    
+    
+    /* ================ Follow ================ */
+    
+    $('#following').on('click', '#follow', function(e) {
+   		e.preventDefault();
+   		
+   		var data = {
+		   	userId: [[${user.id}]]	
+ 		};
+   		
+		$.ajax({
+	   		type: 'GET',
+ 	   		url: '/follow',
+ 	   		data: data,
+ 		   			
+ 		   	success: function(res) {
+ 		   		followers = parseInt($('#followers').text());
+ 		   		$('#followers').text(followers + 1);
+ 				$('#following').html("<a href='#' id='unfollow' class='btn btn-default'>Đang theo dõi</a>");
+	   		},
+			
+			error: function(res) {
+ 				console.log('ERR: ' + res)
+ 			}
+ 	   	});
+    });
+    
+    
+    /* ================ Unfollow ================ */
+    
+    $('#following').on('click', '#unfollow', function(e) {
+   		e.preventDefault();
+   		
+   		var data = {
+		   	userId: [[${user.id}]]	
+ 		};
+   		
+   		$.ajax({
+	   		type: 'GET',
+ 	   		url: '/unfollow',
+ 	   		data: data,
+ 		   			
+ 		   	success: function(res) {
+ 		   		followers = parseInt($('#followers').text());
+		   		$('#followers').text(followers - 1);
+ 				$('#following').html("<a href='#' id='follow' class='btn btn-primary'>Theo dõi</a>");
+	   		},
+			
+			error: function(res) {
+ 				console.log('ERR: ' + res)
+ 			}
+ 	   	});
+    });
+    
+    
+    /* ================ Bootstrap popover ================ */
+    $("[data-toggle=popover]").popover({html:true})
+    
+});
+/*]]>*/
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+	
+<nav th:replace="layout :: header"></nav>	
+	
+<div id="main" class="container">
+	
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">Kết quả tìm kiếm</div>
+			
+			  <!-- List group -->
+			  <ul class="list-group">
+			    <li th:each="user : ${users}" class="list-group-item">
+			    	<img th:src="${user.avatar}" class="img-circle img-responsive search-avatar" />
+		    		<a th:href="@{/user/{username}(username=${user.username})}" th:text="${user.fullname}"></a>
+			    </li>
+			  </ul>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+</body>
+</html>

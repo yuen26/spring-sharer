@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+	
+	<div class="auth-form block">
+		<h1 class="text-center">Sharer</h1>
+		
+		<p th:if="${param.error}" class="error">Email hoặc mật khẩu không chính xác</p>
+		<p th:if="${param.register}" class="success">Bạn đã đăng ký thành công!</p>
+		<p th:if="${param.logout}" class="success">Bạn vừa đăng xuất</p>
+		
+		<form action="#" th:action="@{/login}" method="POST">
+			<div class="form-group">
+				<input type="email" name="email" class="form-control" placeholder="Email" />
+			</div>
+			
+			<div class="form-group">
+				<input type="password" name="password" class="form-control" placeholder="Mật khẩu" />
+			</div>
+			
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Đăng nhập</button>
+		</form>
+		
+		<div id="divider" class="row">
+			<div class="col-sm-5 divider-hr"></div>
+			<div class="col-sm-2 divider-text">hoặc</div>
+			<div class="col-sm-5 divider-hr"></div>
+		</div>
+		
+		<form action="/signin/facebook" method="POST">
+            <input type="hidden" name="scope" value="public_profile,email" />
+		    <button type="submit" class="btn btn-fb btn-lg btn-block" value="Login using Facebook">
+		    	<i class="fa fa-facebook-official"></i> Đăng nhập bằng Facebook
+	    	</button>
+		</form>
+	</div>
+
+	<div id="bottom-block" class="block text-center">
+		<p>Bạn chưa có tài khoản <a th:href="@{/register}">Đăng ký</a></p>
+	</div>
+
+</body>
+</html>

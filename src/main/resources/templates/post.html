@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+	
+<nav th:replace="layout :: header"></nav>	
+	
+<div id="main" class="container">
+
+	<div class="row post">
+		<div id="post-media" class="col-sm-7">
+			<img th:if="${post.type == 'image'}" th:src="${post.url}" class="img-responsive center-block" />
+			<iframe th:if="${post.type == 'video'}" th:src="${post.url}" width="100%" height="595px"></iframe>
+		</div>
+		
+		<div id="post-content" class="col-sm-5">
+			<ul class="list-inline">
+				<li>
+					<a th:href="@{/user/{id}(id=${post.user.username})}">
+						<img th:src="${post.user.avatar}" class="img-circle img-responsive center-block post-avatar" />
+					</a>
+				</li>
+				<li>
+					<a th:href="@{/user/{id}(id=${post.user.username})}">
+						<strong th:text="${post.user.fullname}"></strong>
+					</a>
+				</li>
+				<li th:if="${isFollowing != null and isFollowing == true}" id="following">
+				  <a href="#" id="unfollow" class="btn btn-default">Đang theo dõi</a>
+				</li>
+				<li th:if="${isFollowing != null and isFollowing == false}" id="following">
+				  <a href="#" id="follow" class="btn btn-primary">Theo dõi</a>
+				</li>
+				<li th:if="${post.user.id == #authentication.principal.user.id}" class="pull-right">
+					<div class="dropdown">
+					  <button type="button" class="btn btn-default btn-dropdown dropdown-toggle" data-toggle="dropdown">
+					    <i class="fa fa-ellipsis-h"></i>
+					  </button>
+					  <ul class="dropdown-menu">
+					    <li>
+					    	<a th:href="@{/post/{id}/edit(id=${post.id})}">Sửa bài viết</a>
+				    	</li>
+					    <li>
+					    	<a th:href="@{/post/{id}/delete(id=${post.id})}" 
+					    		th:attr="onclick='return confirm(\'Bạn có đồng ý xóa bài viết này không?\');'" >Xóa bài viết</a>
+				    	</li>
+					  </ul>
+					</div>
+				</li>
+			</ul>
+			
+			<p th:text="${post.caption}" id="post-caption"></p>
+			
+			<ul class="list-inline">
+				<li class="pull-left">
+					<strong><span th:text="${#lists.size(post.likes)}" id="post-likes"></span> lượt thích</strong>
+				</li>
+				<li class="pull-right">
+					<span th:text="${post.ago}" class="post-time"></span>
+				</li>
+			</ul>
+			
+			<div id="comments">
+				<strong id="no-comments" th:if="${#lists.isEmpty(post.comments)}">
+					Bài viết này chưa có bình luận nào
+				</strong>
+				<p th:each="comment : ${post.comments}">
+					<strong th:text="${comment.user.fullname}"></strong>
+					<span th:text="${comment.content}"></span>
+				</p>
+			</div>
+			
+			<div id="post-footer" class="row">
+				<div id="heart" class="col-sm-1">
+					<a href="#" th:if="${isLiked} == true" id="liked">
+						<i class="fa fa-heart"></i>
+					</a>
+					<a href="#" th:unless="${isLiked} == true" id="noliked">
+						<i class="fa fa-heart-o"></i>
+					</a>
+				</div>
+				<div class="col-sm-11">
+					<form id="comment-form" class="form-inline">
+						<div class="input-group">
+					      <input type="text" id="comment-content" class="form-control" 
+					      	required="required" placeholder="Thêm bình luận..." />
+					      <span class="input-group-btn">
+					        <button class="btn btn-primary" type="submit">
+					        	<i class="fa fa-share"></i>
+					        </button>
+					      </span>
+					    </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(document).ready(function() {
+
+	/* ================ Comment ================ */
+	
+	$('#comment-form').submit(function(e) {
+		e.preventDefault();
+
+		if (!$('#comment-content').val()) {
+	     	alert("Vui lòng nhập nội dung cho bình luận");
+		}
+		
+		var data = {
+			content: $('#comment-content').val(),
+			postId: [[${post.id}]]
+		};
+		
+		$.ajax({
+			url: '/comment',
+			type: 'POST',
+			data: data,
+			
+			success: function(res) {
+				$('#no-comments').hide();
+				$('#comments').append(res);
+				$('#comment-content').val('');
+			},
+			
+			error: function(res) {
+				console.log('ERR: ' + res);
+			}
+		});
+	});
+	
+	
+	/* ================ Unlike ================ */
+
+	$('#heart').on('click', '#liked', function(e) {
+		e.preventDefault();
+
+		var data = {
+			postId: [[${post.id}]],
+		};
+
+		$.ajax({
+			url: '/unlike',
+			type: 'GET',
+			data: data,
+			
+			success: function(res) {
+				$('#heart').html("<a href='#' id='noliked' class='test'><i class='fa fa-heart-o'></i></a>");
+				$('#post-likes').text(res);
+			},
+			
+			error: function(res) {
+				console.log('ERR: ' + res);
+			}
+		});
+	});
+	
+	
+	/* ================ Like ================ */
+	
+	$('#heart').on('click', '#noliked', function(e) {
+		e.preventDefault();
+		
+		var data = {
+			postId: [[${post.id}]],
+		};
+		
+		$.ajax({
+			url: '/like',
+			type: 'GET',
+			data: data,
+			
+			success: function(res) {
+				$('#heart').html("<a href='#' id='liked'><i class='fa fa-heart'></i></a>");
+				$('#post-likes').text(res);
+			},
+			
+			error: function(res) {
+				console.log('ERR: ' + res);
+			}
+		});
+	});
+	
+	
+	/* ================ Follow ================ */
+    
+    $('#following').on('click', '#follow', function(e) {
+   		e.preventDefault();
+   		
+   		var data = {
+		   	userId: [[${post.user.id}]]	
+ 		};
+   		
+		$.ajax({
+	   		type: 'GET',
+ 	   		url: '/follow',
+ 	   		data: data,
+ 		   			
+ 		   	success: function(res) {
+ 				$('#following').html("<a href='#' id='unfollow' class='btn btn-default'>Đang theo dõi</a>");
+	   		},
+			
+			error: function(res) {
+ 				console.log('ERR: ' + res);
+ 			}
+ 	   	});
+    });
+    
+    
+    /* ================ Unfollow ================ */
+    
+    $('#following').on('click', '#unfollow', function(e) {
+   		e.preventDefault();
+   		
+   		var data = {
+		   	userId: [[${post.user.id}]]	
+ 		};
+   		
+   		$.ajax({
+	   		type: 'GET',
+ 	   		url: '/unfollow',
+ 	   		data: data,
+ 		   			
+ 		   	success: function(res) {
+ 				$('#following').html("<a href='#' id='follow' class='btn btn-primary'>Theo dõi</a>");
+	   		},
+			
+			error: function(res) {
+ 				console.log('ERR: ' + res)
+ 			}
+ 	   	});
+    });
+
+});
+/*]]>*/
+</script>
+
+</body>
+</html>

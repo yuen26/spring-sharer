@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+
+<nav th:replace="layout :: header"></nav>
+
+<div id="main" class="container">
+
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3 my-form">
+			<h4 class="text-center">Cập nhật ảnh đại diện</h4>
+			<form th:action="@{/user/change-avatar}" method="POST" enctype="multipart/form-data">
+				<div class="form-group">
+					<label>Ảnh đại diện mới</label> <input type="file" name="avatar" accept="image/*" required="required" />
+					<p class="help-block">Vui lòng chọn các file có đuôi .gif, .png, .jpg, .jpeg</p>
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Lưu thay đổi</button>
+			</form>
+		</div>
+	</div>
+	
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+</body>
+</html>

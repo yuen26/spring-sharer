@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+
+<nav th:replace="layout :: header"></nav>
+
+<div class="container">
+	<strong id="progress-text">0% Complete</strong>
+	<div class="progress">
+		<div class="progress-bar progress-bar-success progress-bar-striped"></div>
+	</div>
+
+	<form id="upload-form">
+		<input type="hidden" name="type" value="video" />
+		<div class="form-group">
+			<label>Cảm nghĩ của bạn</label>
+			<textarea name="caption" class="form-control" rows="4" required="required"></textarea>
+		</div>
+		<div class="form-group">
+			<label>Video của bạn</label> 
+			<input type="file" name="file" accept="video/*" required="required" />
+			<p class="help-block">Vui lòng chọn các file video</p>
+		</div>
+		<button type="submit" class="btn btn-primary">Chia sẻ</button>
+	</form>
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+<script src="../static/js/upload.js" th:src="@{/js/upload.js}"></script>
+
+</body>
+</html>

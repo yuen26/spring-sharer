@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:each="post : ${posts}" th:id="'post' + ${post.id}" class="col-sm-4">
+	<div th:if="${post.type == 'image'}" class="thumbnail">
+		<img th:src="${post.url}" />
+		<div class="caption">
+			<p class="pull-left">
+				<span th:text="${#lists.size(post.likes)}"></span> <i class="fa fa-heart-o"></i>
+				<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+			</p>
+			<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right" title="Xem">
+				<i class="fa fa-arrow-circle-right"></i>
+			</a>
+		</div>
+	</div>
+	
+	<div th:if="${post.type == 'video'}" class="thumbnail">
+		<iframe th:src="${post.url}" width="100%" height="250px"></iframe>
+		<div class="caption">
+			<p class="pull-left">
+				<span th:text="${#lists.size(post.likes)}"></span> <i class="fa fa-heart-o"></i>
+				<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+			</p>
+			<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right" title="Xem">
+				<i class="fa fa-arrow-circle-right"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
+</html>

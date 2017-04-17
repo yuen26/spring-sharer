@@ -1,0 +1,321 @@
+body {
+	background-color: #FAFAFA;
+}
+
+
+/*============== COMMONS ==============*/
+
+.container {
+	max-width: 900px;
+}
+
+#main {
+	min-height: 400px;
+}
+
+h1 {
+	font-size: 20px;
+}
+
+.error {
+	color: #ed4956;
+	font-size: 14px;
+}
+
+.success {
+	color: #4e9f2e;
+	font-size: 14px;
+}
+
+.field-error {
+	border-color: #ed4956;
+	margin-bottom: 5px;
+}
+
+a:hover, a:focus {
+	text-decoration: none;
+}
+
+.btn-primary {
+	background-color: #3897F0 !important;
+	border: 1px solid #3897F0;
+}
+
+.btn-fb {
+	background-color: #385185;
+}
+
+.btn-fb, .btn-primary {
+	border-radius: 3px;
+	color: #fff;
+	font-size: 16px;
+	padding: 5px;
+}
+
+.btn-fb:hover, .btn-fb:focus, .btn-primary:hover, .btn-primary:focus {
+	color: #fff;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+	border: 1px solid #3897F0;
+}
+
+ul.stats {
+	font-size: 16px;
+}
+
+ul.stats li {
+	margin-right: 20px;
+}
+
+.list-inline {
+	margin-top: 10px;
+}
+
+.list-inline > li {
+	vertical-align: middle;
+}
+
+.list-group-item {
+	border: none;
+}
+
+
+/*============== NAVBAR ==============*/
+
+.navbar {
+	height: 77px;
+	background-color: #fff;
+	border-bottom: 1px solid #E6E6E6;
+	padding-top: 13px;
+}
+
+.navbar-header a {
+	color: #262626 !important;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.navbar-form {
+	margin-left: 25%;
+}
+
+.navbar-nav li a {
+	font-size: 20px;
+}
+
+
+/*============== AUTH FORM ==============*/
+
+.auth-form {
+	width: 400px;
+	margin: 30px auto 0;
+}
+
+#bottom-block {
+	width: 400px;
+	height: 50px;
+	line-height: 50px;
+	margin: 20px auto 0;
+}
+
+.block {
+	background-color: #fff;
+	border: 1px solid #E6E6E6;
+	border-radius: 1px;
+	color: #999;
+	padding: 0 40px 20px 40px;
+}
+
+.block h1 {
+	color: #262626;
+	margin-bottom: 25px;
+}
+
+.block h2 {
+	font-size: 16px;
+	font-weight: 500;
+	margin-bottom: 15px;
+}
+
+#divider {
+	line-height: 1px;
+	margin: 25px 0;
+}
+
+.divider-hr {
+	background-color: #c7c7c7;
+}
+
+.divider-text {
+	font-size: 13px;
+	font-weight: bold;
+	padding-left: 10px;
+	text-transform: uppercase;
+	text-align:center;
+}
+
+.my-form h4 {
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+
+/*============== POST ==============*/
+#posts {
+	margin-top: 20px;
+}
+
+.post {
+	background-color: #fff;
+	border: 1px solid #e6e6e6;
+	margin-bottom: 30px;
+	padding: 0;
+}
+
+.post header {
+	height: 60px;
+    padding: 5px 20px;
+}
+
+.post-avatar {
+	width: 40px;
+	height: 40px;
+	margin-top: 5px;
+}
+
+.post-img {
+	height: 400px;
+	width: 100%;
+}
+
+a.post-user {
+	font-weight: 600;
+	line-height: 50px;
+	margin-left: 10px;
+}
+
+.post-time {
+	color: #999;
+}
+
+.post footer {
+	height: 45px;
+	font-size: 17px;
+    padding: 10px 20px;
+}
+
+#post-media {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+#post-media img {
+	width: 100%;
+	height: 595px;
+}
+
+#post-content {
+	margin-top: 10px;
+}
+
+#post-info ul > li:last-child {
+	float: right;
+}
+
+#post-caption {
+	height: 100px;
+	overflow-y: auto; 
+}
+
+#comments {
+	height: 320px;
+	border-top: 1px solid #efefef;
+	border-bottom: 1px solid #efefef;
+	margin-top: 50px;
+	padding-top: 20px;
+	overflow-y: auto;
+	clear: both;	
+}
+
+#post-footer {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#comment-form {
+	margin-right: -15px;
+}
+
+#comment-form .input-group {
+	width: 100%;
+}
+
+#heart a {
+	font-size: 24px;	
+}
+
+.fa-heart {
+	color: #ED4956;
+}
+
+.fa-heart-o, .fa-user-o {
+	color: #262626;;
+}
+
+.btn-dropdown {
+	color: #262626;
+}
+
+.btn-dropdown:hover {
+	background-color: transparent;
+	color: #262626;
+}
+
+
+/*============== PROFILE ==============*/
+
+.profile-avatar {
+	width: 150px;
+	height: 150px;
+}
+
+#followers, #followings {
+	color: #333;
+	font-weight: 700;
+}
+
+.thumbnail img {
+	width: 100%;
+	height: 255px;
+}
+
+.thumbnail .caption {
+	height: 35px;
+}
+
+.thumbnail .caption a {
+	font-size: 18px;
+}
+
+#btn-delete {
+	color: #ff4d4d;
+	margin-right: 5px;
+}
+
+#load-more {
+	margin-top: 20px;
+}
+
+/*============== SEARCH ==============*/
+.search-avatar {
+	width: 40px;
+	height: 40px;
+	display: inline-block;
+}
+
+/*============== FOOTER ==============*/
+#footer {
+	color: #003569;
+	margin: 50px 250px;
+}

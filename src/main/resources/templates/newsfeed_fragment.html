@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:each="post : ${posts}" class="post">
+	<header>
+		<a th:href="@{/user/{id}(id=${post.user.username})}" class="pull-left">
+			<img th:src="${post.user.avatar}" class="img-circle img-responsive center-block post-avatar" />
+		</a>
+		<a th:href="@{/user/{id}(id=${post.user.username})}" class="pull-left post-user">
+			<span th:text="${post.user.fullname}"></span>
+		</a>
+		<span th:text="${post.ago}" class="pull-right post-time" style="line-height: 50px;"></span>
+	</header>
+	
+	<section th:if="${post.type == 'image'}">
+		<img th:src="${post.url}" class="post-img" />
+	</section>
+		
+	<section th:if="${post.type == 'video'}">
+		<iframe th:src="${post.url}" width="100%" height="400px"></iframe>
+	</section>
+	
+	<footer>
+		<p class="pull-left">
+			<span th:text="${#lists.size(post.likes)}"></span> <i class="fa fa-heart-o"></i>
+			<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+		</p>
+		<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right" title="Xem thêm">
+			<i class="fa fa-arrow-circle-right"></i>
+		</a>
+	</footer>
+</div>
+
+</html>

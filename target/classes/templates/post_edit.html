@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+	
+<nav th:replace="layout :: header"></nav>	
+	
+<div id="main" class="container">
+
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2 my-form">
+			<h4 class="text-center">Sửa bài viết</h4>
+			<form action="#" th:action="@{/post/update}" th:object="${post}" method="POST">
+				<input type="hidden" th:field="*{id}" />
+				
+				<div class="form-group">
+					<textarea th:text="${post.caption}" th:field="*{caption}" th:errorclass="field-error" 
+						class="form-control" rows="5"></textarea>
+					<span class="error" th:if="${#fields.hasErrors('caption')}" th:errors="*{caption}"></span>
+				</div>
+				
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Lưu thay đổi</button>
+			</form>
+		</div>
+	</div>
+	
+</div>
+
+<footer th:replace="layout :: footer"></footer>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:each="post : ${posts}" class="col-sm-8 col-sm-offset-2 post">
+	<ul class="list-inline">
+		<li>
+			<a th:href="@{/user/{id}(id=${post.user.username})}">
+				<img th:src="${post.user.avatar}" class="img-circle img-responsive center-block post-avatar" />
+			</a>
+		</li>
+		<li>
+			<a th:href="@{/user/{id}(id=${post.user.username})}">
+				<strong th:text="${post.user.fullname}"></strong>
+			</a>
+		</li>
+		<li class="pull-right">
+			<span th:text="${post.ago}" class="time"></span>
+		</li>
+	</ul>
+	
+	<div th:if="${post.type == 'image'}" class="thumbnail">
+		<img th:src="${post.url}" />
+		<div class="caption">
+			<p class="pull-left">
+				<span th:text="${post.likes}"></span> <i class="fa fa-heart-o"></i>
+				<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+			</p>
+			<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right">
+				<i class="fa fa-arrow-circle-right"></i>
+			</a>
+		</div>
+	</div>
+		
+	<div th:if="${post.type == 'video'}" class="thumbnail">
+		<iframe th:src="${post.url}" width="100%" height="250px"></iframe>
+		<div class="caption">
+			<p class="pull-left">
+				<span th:text="${post.likes}"></span> <i class="fa fa-heart-o"></i>
+				<span th:text="${#lists.size(post.comments)}"></span> <i class="fa fa-comment-o"></i>
+			</p>
+			<a th:href="@{/post/{id}(id=${post.id})}" class="pull-right">
+				<i class="fa fa-arrow-circle-right"></i>
+			</a>
+		</div>
+	</div>
+</div>
+
+</html>
