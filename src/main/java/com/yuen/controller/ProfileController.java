@@ -115,7 +115,7 @@ public class ProfileController {
             User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
         	userService.changeAvatar(currentUser, multipartFile);
         	
-        	return "redirect:/";
+        	return "redirect:/user/" + currentUser.getUsername();
         } catch (IOException e) {
         	System.out.println(e.getMessage());
         	return "change_avatar";

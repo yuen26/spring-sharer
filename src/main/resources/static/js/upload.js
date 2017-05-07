@@ -46,7 +46,7 @@ $(document).ready(function() {
 			
 			error: function(res) {
 				console.log('ERR: ' + res);
-				alert('File của bạn vượt quá dung lượng 25Mb!');
+				alert('Đã xảy ra lỗi trong quá trình tải lên :(');
 				$('.progress').hide();
 				$('#progress-text').hide();
 			}
