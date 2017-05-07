@@ -23,8 +23,8 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Integer
 	Page<Post> findByUserIn(Set<User> users, Pageable pageable);
 	
 	@Query(value = "select p from Post p left join fetch p.likes left join fetch p.comments left join fetch p.user where p.id = ?1")
-	Post findOne(int id);
+	Post findOne(Integer id);
 	
-	int countByUser(User user);
+	Integer countByUser(User user);
 	
 }

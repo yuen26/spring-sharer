@@ -9,7 +9,9 @@
 	
 	<div class="row">
 		<div class="col-sm-6 col-sm-offset-3">
-			<div class="panel panel-default">
+			<h4 th:if="${#lists.size(users) eq 0}" class="text-center">Rất tiếc, chúng tối không tìm thấy :(</h4>
+			
+			<div th:if="${#lists.size(users) gt 0}" class="panel panel-default">
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">Kết quả tìm kiếm</div>
 			

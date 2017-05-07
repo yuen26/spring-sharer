@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,25 +45,23 @@ public class ProfileController {
 	
 	@GetMapping("/user/{username}")
 	public String index(@PathVariable("username") String username, Model model) throws IOException {
-		// Get query user
+		// Get querying user and his/her posts
 		User user = userService.findByUsername(username);
-		int countPosts = postService.countByUser(user);
 		Page<Post> posts = postService.findByUser(user, 0, Const.POSTS_PER_PAGE);
-		
+		model.addAttribute("user", user);
+		if (posts.hasContent()) {
+			model.addAttribute("posts", posts);
+		}
+
 		// Get current user
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		
-		// Check current user is following query user not
+		// Check current user is following query user or not
 		if (!user.equals(currentUser)) {
 			model.addAttribute("isFollowing", userService.isFollowing(currentUser, user));
 		}
-		
-		model.addAttribute("user", user);
-		model.addAttribute("posts", posts);
-		model.addAttribute("countPosts", countPosts);
-		
+
 		return "profile";
 	}
 	
@@ -71,7 +70,9 @@ public class ProfileController {
         User user = userService.findById(userId);
         Page<Post> posts = postService.findByUser(user, page, Const.POSTS_PER_PAGE);
         
-        model.addAttribute("posts", posts);
+        if (posts.hasContent()) {
+			model.addAttribute("posts", posts);
+		}
         return new ModelAndView("profile_fragment");
     }
 	
@@ -82,9 +83,8 @@ public class ProfileController {
 	
 	@GetMapping("/user/change-profile")
 	public String getChangeProfile(Model model) {
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		
 		model.addAttribute("user", currentUser);
 		return "change_profile";
@@ -111,9 +111,8 @@ public class ProfileController {
 	@PostMapping("/user/change-avatar")
     public String postChangeAvatar(@RequestParam("avatar") MultipartFile multipartFile) {
         try {
-        	CustomUserDetails principal = 
-        			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    		User currentUser = principal.getUser();
+        	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
         	userService.changeAvatar(currentUser, multipartFile);
         	
         	return "redirect:/";

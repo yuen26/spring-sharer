@@ -25,12 +25,14 @@ public class RegisterValidator implements Validator {
 		User user = (User) o;
 		
 		// Confirm password validation
+		// empty
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotEmpty");
 
+        // match
         if (!user.getConfirmPassword().equals(user.getPassword())) {
             errors.rejectValue("confirmPassword", "Match.user.confirmPassword");
         }
-		
+        
         
 		// Username validation
 		if (userService.findByUsername(user.getUsername()) != null) {

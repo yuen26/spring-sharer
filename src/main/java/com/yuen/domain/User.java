@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
@@ -51,6 +50,20 @@ public class User implements Serializable {
 	
 	@Column(name = "facebook_id", nullable = true, length = 16)
 	private String facebookId;
+	
+	@Column(name = "folder_id", nullable = true, length = 50)
+	private String folderId;
+	
+	@Column(name = "is_locked", nullable = false)
+	private boolean isLocked;
+	
+	@JoinTable(
+		name = "user_role", 
+		joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, 
+		inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
+	)
+	@ManyToMany(cascade = CascadeType.MERGE)
+    private Set<Role> roles = new HashSet<>();
 	
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Post> posts = new LinkedHashSet<>();
@@ -143,6 +156,36 @@ public class User implements Serializable {
 
 	public void setFacebookId(String facebookId) {
 		this.facebookId = facebookId;
+	}
+	
+	public String getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(String folderId) {
+		this.folderId = folderId;
+	}
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void addRole(Role role) {
+		roles.add(role);
+		role.getUsers().add(this);
+	}
+	
+	public void removeRole(Role role) {
+		roles.remove(role);
+		role.getUsers().remove(this);
 	}
 	
 	public Set<Post> getPosts() {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="head">
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -75,8 +75,8 @@
 				
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<a href="#">
-							<i class="fa fa-heart-o"></i>
+						<a href="#" th:inline="text" class="welcome">
+							Xin chào, [[${#authentication.principal.user.fullname}]]
 						</a>
 					</li>
 					<li>

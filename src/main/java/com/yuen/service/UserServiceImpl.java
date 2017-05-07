@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.services.drive.model.File;
 import com.yuen.domain.User;
+import com.yuen.repository.RoleRepository;
 import com.yuen.repository.UserRepository;
 import com.yuen.util.Const;
 import com.yuen.util.FileUtil;
@@ -21,6 +22,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -54,16 +58,35 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public User save(User user) {
+		// Insert into DB
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setAvatar(GoogleDriveUtil.createImageUrl(Const.DEFAULT_AVATAR_ID));
-		return userRepository.save(user);
+		user.addRole(roleRepository.findByName("ROLE_MEMBER"));
+		user = userRepository.save(user);
+		
+		// Create GG Drive folder for user
+		File folder = GoogleDriveUtil.createFolder(String.valueOf(user.getId()));
+		user.setFolderId(folder.getId());
+		userRepository.save(user);
+		
+		return user;
 	}
 
+	@Override
+	public void delete(User user) {
+		// Delete user in DB
+		userRepository.delete(user);
+		
+		// Delete Google Drive folder
+		GoogleDriveUtil.deleteFile(user.getFolderId());
+	}
+	
 	@Override
 	@Transactional
 	public User changeAvatar(User user, MultipartFile multipartFile) throws IOException {
 		// Upload file
-		File uploadedFile = GoogleDriveUtil.upload(FileUtil.convert(multipartFile), "image");
+		File uploadedFile = GoogleDriveUtil.upload(
+				FileUtil.convert(multipartFile), "image", user.getFolderId());
 				
 		// Update avatar attribute
 		user.setAvatar(GoogleDriveUtil.createImageUrl(uploadedFile.getId()));

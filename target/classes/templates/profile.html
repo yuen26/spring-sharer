@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout :: head"></head>
 <body>
 	
@@ -59,13 +60,29 @@
 					<li th:if="${isFollowing} == false" id="following">
 					  <a href="#" id="follow" class="btn btn-primary">Theo dõi</a>
 					</li>
+					
+					<li sec:authorize="hasRole('ROLE_ADMIN')">
+						<div class="btn-group">
+						  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+						    Hoạt động quản trị <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+						    <li><a th:href="@{/admin/user/{id}/lock(id=${user.id})}">Khóa tài khoản</a></li>
+						    <li><a th:href="@{/admin/user/{id}/delete(id=${user.id})}">Xóa tài khoản</a></li>
+						  </ul>
+						</div>
+					</li>
 				</ul>
 			</div>
 			
 			<div class="row">
 				<ul class="list-inline stats">
 					<li>
-						<p><strong th:text="${countPosts}"></strong> bài viết</p>
+						<p>
+							<strong th:if="${posts} == null">0</strong>
+							<strong th:if="${posts} != null" th:text="${posts.totalElements}"></strong>
+							 bài viết
+						</p>
 					</li>
 					<li>
 						<p>
@@ -126,11 +143,11 @@
 	</div>
 
 	<!-- POSTS -->
-	<div th:if="${countPosts == 0}" class="row" style="margin-top:20px;">
+	<div th:if="${posts} == null" class="row" style="margin-top:20px;">
 		<h4 class="text-center">Người dùng này chưa có bài viết nào</h4>
 	</div>
 	
-	<div th:unless="${countPosts == 0}" class="row" style="margin-top:20px;">
+	<div th:if="${posts} != null" class="row" style="margin-top:20px;">
 		<div id="posts">
 			<div th:each="post : ${posts}" th:id="'post' + ${post.id}" class="col-sm-4">
 				<div th:if="${post.type == 'image'}" class="thumbnail">
@@ -159,12 +176,13 @@
 					</div>
 				</div>
 			</div>
+			
+			<div th:if="${posts.hasNext()}" id="load-more" class="col-sm-12 text-center">
+				<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
+				<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
+			</div>
 		</div>
-		
-		<div id="load-more" class="col-sm-12 text-center">
-			<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
-			<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
-		</div>
+
 	</div>
 	
 </div>
@@ -179,8 +197,8 @@ $(document).ready(function() {
 	
 	var page = 0;
 	
+	// Init loadmore
 	$('#loading-gif').hide();
-
 	$('#btn-load').click(function(e) {
       e.preventDefault();
       page++;
@@ -202,13 +220,16 @@ $(document).ready(function() {
 	        data: data,
 	        
 	        success: function(res) {
-	        	if (res.search('post') === -1) { // No more posts
-	        		$('#load-more').remove();
-	        	} else {
-	        		$('#posts').append(res);
-					$('#loading-gif').hide(); 
-					$('#btn-load').show(); 
-	        	}
+        		$('#load-more').remove();
+        		$('#posts').append(res);
+        		
+        		// Re-init loadmore
+        		$('#loading-gif').hide(); 
+        		$('#btn-load').click(function(e) {
+       		      e.preventDefault();
+       		      page++;
+       		      loadMorePosts(page);
+       		    });
 	        },
 	        
 	        error: function(res) {

@@ -11,7 +11,7 @@ import com.yuen.domain.User;
 
 public interface NotificationRepository extends CrudRepository<Notification, Integer> {
 
-	@Query("from Notification n left join fetch n.sender where n.receiver = ?1 and n.read = 0 order by n.created desc")
+	@Query("select n from Notification n left join fetch n.sender where n.receiver = ?1 and n.read = 0 order by n.created desc")
 	List<Notification> findNotRead(User user);
 
 	@Modifying

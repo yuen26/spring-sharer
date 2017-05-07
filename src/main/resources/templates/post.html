@@ -44,6 +44,9 @@
 					    	<a th:href="@{/post/{id}/delete(id=${post.id})}" 
 					    		th:attr="onclick='return confirm(\'Bạn có đồng ý xóa bài viết này không?\');'" >Xóa bài viết</a>
 				    	</li>
+				    	<li>
+					    	<a th:href="@{/post/{id}/edit(id=${post.id})}">Chia sẻ bài viết trên Facebook</a>
+				    	</li>
 					  </ul>
 					</div>
 				</li>
@@ -55,6 +58,7 @@
 				<li class="pull-left">
 					<strong><span th:text="${#lists.size(post.likes)}" id="post-likes"></span> lượt thích</strong>
 				</li>
+				<li class="pull-left" th:utext="${fbLikeButton}"></li>
 				<li class="pull-right">
 					<span th:text="${post.ago}" class="post-time"></span>
 				</li>
@@ -99,6 +103,19 @@
 </div>
 
 <footer th:replace="layout :: footer"></footer>
+
+<div id="fb-root"></div>
+<script th:inline="javascript">
+/*<![CDATA[*/
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.9&appId=144895222703546";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+/*]]>*/
+</script>
 
 <script th:inline="javascript">
 /*<![CDATA[*/

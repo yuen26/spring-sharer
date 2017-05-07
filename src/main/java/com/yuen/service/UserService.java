@@ -19,8 +19,10 @@ public interface UserService {
 	
 	User save(User user);
 	
+	void delete(User user);
+	
 	User changeAvatar(User user, MultipartFile multipartFile) throws IOException; 
 	
 	boolean isFollowing(User user1, User user2);
-	
+
 }

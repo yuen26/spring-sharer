@@ -27,14 +27,15 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional
 	public void pushFollowNotification(User sender, User receiver) {
-		// Init notification
 		Notification notification = new Notification();
 		
+		// Set notification content
 		StringBuilder content = new StringBuilder();
 		content.append(sender.getFullname());
 		content.append(" đã theo dõi bạn");
 		notification.setContent(content.toString());
 		
+		// Set notification redirect
 		StringBuilder redirect = new StringBuilder();
 		redirect.append("/user/");
 		redirect.append(sender.getUsername());
@@ -52,9 +53,9 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional
 	public void pushLikeNotification(User sender, User receiver, Post post) {
-		// Init notification
 		Notification notification = new Notification();
 		
+		// Set notification content
 		StringBuilder content = new StringBuilder();
 		content.append(sender.getFullname());
 		content.append(" đã thích bài viết ");
@@ -62,6 +63,7 @@ public class NotificationServiceImpl implements NotificationService {
 		content.append(" của bạn");
 		notification.setContent(content.toString());
 		
+		// Set notification redirect
 		StringBuilder redirect = new StringBuilder();
 		redirect.append("/post/");
 		redirect.append(post.getId());
@@ -79,9 +81,9 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	@Transactional
 	public void pushCommentNotification(User sender, User receiver, Post post) {
-		// Init notification
 		Notification notification = new Notification();
 		
+		// Set notification content
 		StringBuilder content = new StringBuilder();
 		content.append(sender.getFullname());
 		content.append(" đã bình luận bài viết ");
@@ -89,6 +91,7 @@ public class NotificationServiceImpl implements NotificationService {
 		content.append(" của bạn");
 		notification.setContent(content.toString());
 		
+		// Set notification redirect
 		StringBuilder redirect = new StringBuilder();
 		redirect.append("/post/");
 		redirect.append(post.getId());

@@ -15,10 +15,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	
 	List<User> findByFullnameContaining(String q);
 	
-	@Query("from User u left join fetch u.followings left join fetch u.followers where u.username = ?1")
+	@Query("select u from User u left join fetch u.followings left join fetch u.followers where u.username = ?1")
 	User findByUsername(String username);
 	
-	@Query("from User u left join fetch u.followings where u.email = ?1")
+	@Query("select u from User u left join fetch u.followings where u.email = ?1")
 	User findByEmail(String email);
 	
 	User findByIdAndFollowings_Id(int followerId, int followedId);

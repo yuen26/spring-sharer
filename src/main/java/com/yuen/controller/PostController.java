@@ -3,6 +3,7 @@ package com.yuen.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,9 +45,8 @@ public class PostController {
 		}
 		
 		User owner = post.getUser();
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
     	
 		// Check current user liked post not
 		boolean isLiked = (likeService.liked(post, currentUser) != null) ? true : false;
@@ -56,6 +56,10 @@ public class PostController {
 			model.addAttribute("isFollowing", userService.isFollowing(currentUser, owner));
 		}
 		
+		// Facebook Like button HTML code
+		String fbLikeButton = "<div class='fb-like' data-href='http://127.0.0.1:8080/post/" + post.getId() + "' data-layout='button_count' data-action='like' data-size='small' data-show-faces='true' data-share='true'></div>";
+		
+		model.addAttribute("fbLikeButton", fbLikeButton);
 		model.addAttribute("post", post);
 		model.addAttribute("isLiked", isLiked);
 		return "post";
@@ -74,10 +78,9 @@ public class PostController {
 			return "404";
 		} 
 		
-		// Check current user is owner post not to edit
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		// Current user must be owner post if want to edit
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		if (!post.getUser().equals(currentUser)) {
 			return "404";
 		}
@@ -106,10 +109,9 @@ public class PostController {
 			return "404";
 		}
 		
-		// Check current user is owner post not to delete
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		// Current user must be owner post if want to delete
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		if (!post.getUser().equals(currentUser)) {
 			return "404";
 		}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,17 +41,14 @@ public class UploadController {
     		@RequestParam("caption") String caption, 
     		@RequestParam("file") MultipartFile multipartFile) {
         try {
-        	// Init post
+        	// Save post
         	Post post = new Post();
         	post.setType(type);
         	post.setCaption(caption);
         	post.setCreated(new Date());
-        	CustomUserDetails principal = 
-        			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        	User currentUser = principal.getUser();
+        	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
         	post.setUser(currentUser);
-        	
-        	// Insert post into DB
         	postService.save(post, multipartFile);
         	
         	return "success";

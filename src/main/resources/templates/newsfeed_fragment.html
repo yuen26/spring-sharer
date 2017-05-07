@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:each="post : ${posts}" class="post">
+<div th:if="${posts} != null" th:each="post : ${posts}" class="post">
 	<header>
 		<a th:href="@{/user/{id}(id=${post.user.username})}" class="pull-left">
 			<img th:src="${post.user.avatar}" class="img-circle img-responsive center-block post-avatar" />
@@ -29,6 +29,11 @@
 			<i class="fa fa-arrow-circle-right"></i>
 		</a>
 	</footer>
+</div>
+
+<div th:if="${posts.hasNext()}" id="load-more" class="text-center">
+	<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
+	<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
 </div>
 
 </html>

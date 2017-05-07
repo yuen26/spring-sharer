@@ -90,20 +90,44 @@ public class GoogleDriveUtil {
 	}
 
 	/**
+	 * Create GoogleDrive nested folder
+	 * https://developers.google.com/drive/v3/web/folder
+	 * 
+	 * @param String 
+	 * 			Folder name
+	 * @return com.google.api.services.drive.model.File
+	 * @throws IOException
+	 */
+	public static File createFolder(String name) {
+		File fileMetadata = new File();
+		fileMetadata.setName(name);
+		fileMetadata.setParents(Collections.singletonList(Const.DRIVE_FOLDER_ID));
+		fileMetadata.setMimeType("application/vnd.google-apps.folder");
+
+		File file = null;
+		try {
+			file = getDriveService().files().create(fileMetadata)
+			        .setFields("id")
+			        .execute();
+			System.out.println(file.getId());
+		} catch (IOException e) {
+			System.out.println("An error occurred: " + e);
+		}
+		
+		return file;
+	}
+	
+	/**
 	 * Upload image or video to GoogleDrive folder
 	 * https://developers.google.com/drive/v3/web/folder
 	 * 
 	 * @return com.google.api.services.drive.model.File
 	 * @throws IOException
 	 */
-	public static File upload(java.io.File filePath, String type) throws IOException {
-		// Build a new authorized API client service.
-		Drive driveService = getDriveService();
-
-		String folderId = Const.UPLOAD_FOLDER_ID;
+	public static File upload(java.io.File filePath, String type, String parent) throws IOException {
 		File fileMetadata = new File();
 		fileMetadata.setName(filePath.getName());
-		fileMetadata.setParents(Collections.singletonList(folderId));
+		fileMetadata.setParents(Collections.singletonList(parent));
 		FileContent mediaContent = null;
 		switch (type) {
 			case "image":
@@ -113,25 +137,23 @@ public class GoogleDriveUtil {
 				mediaContent = new FileContent("video/*", filePath);
 				break;
 		}
-		File file = driveService.files().create(fileMetadata, mediaContent).setFields("id, parents").execute();
+		File file = getDriveService().files().create(fileMetadata, mediaContent).setFields("id, parents").execute();
 		System.out.println(file.getId());
 
 		return file;
 	}
 
 	/**
-	 * Permanently delete a file, skipping the trash.
+	 * Permanently delete a file or folder, skipping the trash.
 	 *
 	 * @param service
 	 *            Drive API service instance.
 	 * @param fileId
-	 *            ID of the file to delete.
+	 *            ID of the file or folder to delete.
 	 */
 	public static void deleteFile(String fileId) {
 		try {
-			// Build a new authorized API client service.
-			Drive driveService = getDriveService();
-			driveService.files().delete(fileId).execute();
+			getDriveService().files().delete(fileId).execute();
 		} catch (IOException e) {
 			System.out.println("An error occurred: " + e);
 		}

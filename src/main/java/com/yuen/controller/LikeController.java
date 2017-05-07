@@ -1,6 +1,7 @@
 package com.yuen.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,23 +33,22 @@ public class LikeController {
 	public int like(@RequestParam int postId) {
 		// Fetch post and current user
 		Post post = postService.findOne(postId);
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		
+        // Save like
 		Like liked = likeService.liked(post, currentUser);
     	if (liked == null) {
-    		// Insert new like into DB
     		likeService.save(new Like(post, currentUser));
     		
     		// Push notification
-    		notificationService.pushLikeNotification(currentUser, post.getUser(), post);
+    		if (!currentUser.equals(post.getUser())) {
+    			notificationService.pushLikeNotification(currentUser, post.getUser(), post);
+    		}
     	}
     	
-    	// Count new total likes of post 
-    	int likes = likeService.countByPost(post);
-    	
-		return likes;
+    	// Return new total likes of post 
+    	return likeService.countByPost(post);
 	}
 	
 	@GetMapping("/unlike")
@@ -56,20 +56,17 @@ public class LikeController {
 	public int unlike(@RequestParam int postId) {
 		// Fetch post and current user
 		Post post = postService.findOne(postId);
-		Object principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	User currentUser = ((CustomUserDetails) principal).getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
 		
+        // Delete like
 		Like liked = likeService.liked(post, currentUser);
     	if (liked != null) {
-    		// Delete like from DB
     		likeService.delete(liked);
     	}
     	
     	// Count new total likes of post 
-    	int likes = likeService.countByPost(post);
-    	
-		return likes;
+    	return likeService.countByPost(post);
 	}
 	
 }

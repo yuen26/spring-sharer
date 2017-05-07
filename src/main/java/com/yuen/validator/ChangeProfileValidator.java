@@ -25,11 +25,14 @@ public class ChangeProfileValidator implements Validator {
 		User user = (User) o;
 		
 		// Confirm password validation
+		// empty
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "NotEmpty");
-
+        
+        // match
         if (!user.getConfirmPassword().equals(user.getPassword())) {
             errors.rejectValue("confirmPassword", "Match.user.confirmPassword");
         }
+        
         
 		// Username validation
         User dbUser = userService.findByUsername(user.getUsername());

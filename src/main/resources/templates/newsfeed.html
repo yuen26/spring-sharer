@@ -37,8 +37,20 @@
 	  </div>
 	</div>
 
+	<!-- MESSAGES -->
+	<div th:if="${message}" class="row alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        	<span aria-hidden="true">&times;</span>
+        </button>
+        <span th:text="${message}"></span>
+    </div>
+    
 	<!-- POSTS -->
-	<div id="posts">
+	<div th:if="${posts} == null" id="posts">
+		<h4 class="text-center">Bạn chưa có bài viết nào :(</h4>
+	</div>
+	
+	<div th:if="${posts} != null" id="posts">
 		<div th:each="post : ${posts}" class="post">
 			<header>
 				<a th:href="@{/user/{username}(username=${post.user.username})}" class="pull-left">
@@ -68,11 +80,11 @@
 				</a>
 			</footer>
 		</div>
-	</div>
-		
-	<div id="load-more" class="text-center">
-		<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
-		<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
+	
+		<div th:if="${posts.hasNext()}" id="load-more" class="text-center">
+			<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
+			<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
+		</div>
 	</div>
 	
 </div>
@@ -87,8 +99,8 @@ $(document).ready(function() {
 	
 	var page = 0;
 	
+	// Init loadmore
 	$('#loading-gif').hide();
-
 	$('#btn-load').click(function (e) {
       e.preventDefault();
       page++;
@@ -109,14 +121,17 @@ $(document).ready(function() {
 	        data: data,
 	        
 	        success: function(res) {
-	        	if (res.search('post') === -1) { // No more postt
-	        		$('#load-more').remove();
-	        	} else {
-	        		$('#posts').append(res);
-					$('#loading-gif').hide(); 
-					$('#btn-load').show(); 
-	        	}
-	        },
+        		$('#load-more').remove();
+        		$('#posts').append(res);
+        		
+        		// Re-init loadmore
+				$('#loading-gif').hide(); 
+				$('#btn-load').click(function (e) {
+			      e.preventDefault();
+			      page++;
+			      loadMorePosts(page);
+			    });
+        	},
 	        
 	        error: function(res) {
 	          console.log('ERR:' + res);

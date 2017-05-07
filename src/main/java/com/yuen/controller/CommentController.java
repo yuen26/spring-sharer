@@ -3,6 +3,7 @@ package com.yuen.controller;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,22 +35,21 @@ public class CommentController {
     public ModelAndView comment(@RequestParam String content, @RequestParam int postId, Model model) {
 		// Fetch post and current user
 		Post post = postService.findOne(postId);
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = ((CustomUserDetails) authentication.getPrincipal()).getUser();
         
-        // Init comment
+        // Save comment
 		Comment comment = new Comment();
         comment.setContent(content);
         comment.setCreated(new Date());
         comment.setPost(post);
     	comment.setUser(currentUser);
-        
-    	// Insert new comment into DB
     	commentService.save(comment);
     	
     	// Push notification
-    	notificationService.pushCommentNotification(currentUser, post.getUser(), post);
+    	if (!currentUser.equals(post.getUser())) {
+    		notificationService.pushCommentNotification(currentUser, post.getUser(), post);
+    	}
     	
         model.addAttribute("comment", comment);
         return new ModelAndView("comment_fragment");

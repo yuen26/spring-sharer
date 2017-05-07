@@ -76,7 +76,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         				"/comment", 
         				"/like", "/unlike", 
         				"/follow/**", "/unfollow/**")
-        		.authenticated()
+        			.authenticated()
+        		.antMatchers("/admin/**")
+        			.hasRole("ADMIN")
         		.and()
     		.formLogin()
             	.loginPage("/login")

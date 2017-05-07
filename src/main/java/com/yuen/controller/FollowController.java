@@ -30,11 +30,11 @@ public class FollowController {
 	@GetMapping("/follow")
 	@ResponseBody
 	public String follow(@RequestParam int userId) {
-		// Insert new relationship into DB
+		// Save relationship
 		User user = userService.findById(userId);
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        User currentUser = principal.getUser();
 		followService.follow(currentUser, user);
 		
 		// Push notification
@@ -43,8 +43,8 @@ public class FollowController {
 		// Update principal
 		currentUser.addFollowing(user);
 		principal.setUser(currentUser);
-		Authentication authentication = 
-				new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+		authentication = new UsernamePasswordAuthenticationToken(
+				principal, principal.getPassword(), principal.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		return "success";
@@ -55,16 +55,16 @@ public class FollowController {
 	public String unfollow(@RequestParam int userId) {
 		// Delete relationship from DB
 		User user = userService.findById(userId);
-		CustomUserDetails principal = 
-    			(CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User currentUser = principal.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
+        User currentUser = principal.getUser();
 		followService.unfollow(currentUser, user);
 		
 		// Update principal
 		currentUser.removeFollowing(user);
 		principal.setUser(currentUser);
-		Authentication authentication = 
-				new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+		authentication = new UsernamePasswordAuthenticationToken(
+				principal, principal.getPassword(), principal.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		return "success";

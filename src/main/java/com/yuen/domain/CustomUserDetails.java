@@ -13,7 +13,9 @@ public class CustomUserDetails implements UserDetails {
 	private User user;
 	
 	private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		
+	
+	private boolean isLocked;
+	
 	public User getUser() {
 		return user;
 	}
@@ -47,9 +49,13 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return !isLocked;
 	}
 
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+	
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;

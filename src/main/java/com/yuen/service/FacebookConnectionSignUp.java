@@ -10,14 +10,20 @@ import org.springframework.social.facebook.api.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.api.services.drive.model.File;
+import com.yuen.repository.RoleRepository;
 import com.yuen.repository.UserRepository;
 import com.yuen.util.FacebookUtil;
+import com.yuen.util.GoogleDriveUtil;
 
 @Service
 public class FacebookConnectionSignUp implements ConnectionSignUp {
  
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private RoleRepository roleRepository;
     
     @Autowired
 	private PasswordEncoder passwordEncoder;
@@ -33,6 +39,7 @@ public class FacebookConnectionSignUp implements ConnectionSignUp {
 			dbUser.setFacebookId(fbUser.getId());
 			userRepository.save(dbUser);
 		} else {
+			// Save user
 			dbUser = new com.yuen.domain.User();
 			dbUser.setFullname(fbUser.getName());
 			dbUser.setUsername(fbUser.getId());
@@ -40,6 +47,12 @@ public class FacebookConnectionSignUp implements ConnectionSignUp {
 	        dbUser.setPassword(passwordEncoder.encode(RandomStringUtils.randomAlphanumeric(8)));
 	        dbUser.setAvatar(connection.createData().getImageUrl());
 	        dbUser.setFacebookId(fbUser.getId());
+	        dbUser.addRole(roleRepository.findByName("ROLE_MEMBER"));
+	        dbUser = userRepository.save(dbUser);
+	        
+	        // Create new GG Drive folder for user
+	        File folder = GoogleDriveUtil.createFolder(String.valueOf(dbUser.getId()));
+	        dbUser.setFolderId(folder.getId());
 	        userRepository.save(dbUser);
 		}
 		

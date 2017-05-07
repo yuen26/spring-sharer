@@ -29,4 +29,9 @@
 	</div>
 </div>
 
+<div th:if="${posts.hasNext()}" id="load-more" class="col-sm-12 text-center">
+	<a href="#" id="btn-load" class="btn btn-primary">Tải thêm</a>
+	<img src="../static/images/loading.gif" th:src="@{/images/loading.gif}" id="loading-gif" />
+</div>
+
 </html>

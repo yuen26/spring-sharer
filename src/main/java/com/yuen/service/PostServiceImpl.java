@@ -55,7 +55,8 @@ public class PostServiceImpl implements PostService {
 	@Transactional
 	public Post save(Post post, MultipartFile multipartFile) throws IOException {
 		// Upload file
-		File uploadedFile = GoogleDriveUtil.upload(FileUtil.convert(multipartFile), post.getType());
+		File uploadedFile = GoogleDriveUtil.upload(
+				FileUtil.convert(multipartFile), post.getType(), post.getUser().getFolderId());
 		
 		// Set Google Drive file ID of post
 		post.setFileId(uploadedFile.getId());
