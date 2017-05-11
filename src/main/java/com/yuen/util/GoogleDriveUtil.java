@@ -118,7 +118,7 @@ public class GoogleDriveUtil {
 	}
 	
 	/**
-	 * Upload image or video to GoogleDrive folder
+	 * Upload photo or video to GoogleDrive folder
 	 * https://developers.google.com/drive/v3/web/folder
 	 * 
 	 * @return com.google.api.services.drive.model.File
@@ -130,7 +130,7 @@ public class GoogleDriveUtil {
 		fileMetadata.setParents(Collections.singletonList(parent));
 		FileContent mediaContent = null;
 		switch (type) {
-			case "image":
+			case "photo":
 				mediaContent = new FileContent("image/jpeg", filePath);
 				break;
 			case "video":
@@ -160,11 +160,11 @@ public class GoogleDriveUtil {
 	}
 
 	/**
-	 * Create image url after uploading
+	 * Create photo url after uploading
 	 * 
 	 * @return String
 	 */
-	public static String createImageUrl(String fileId) {
+	public static String createPhotoUrl(String fileId) {
 		return "https://drive.google.com/uc?export=download&id=" + fileId;
 	}
 

@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 	public User save(User user) {
 		// Insert into DB
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setAvatar(GoogleDriveUtil.createImageUrl(Const.DEFAULT_AVATAR_ID));
+		user.setAvatar(GoogleDriveUtil.createPhotoUrl(Const.DEFAULT_AVATAR_ID));
 		user.addRole(roleRepository.findByName("ROLE_MEMBER"));
 		user = userRepository.save(user);
 		
@@ -86,10 +86,10 @@ public class UserServiceImpl implements UserService {
 	public User changeAvatar(User user, MultipartFile multipartFile) throws IOException {
 		// Upload file
 		File uploadedFile = GoogleDriveUtil.upload(
-				FileUtil.convert(multipartFile), "image", user.getFolderId());
+				FileUtil.convert(multipartFile), "photo", user.getFolderId());
 				
 		// Update avatar attribute
-		user.setAvatar(GoogleDriveUtil.createImageUrl(uploadedFile.getId()));
+		user.setAvatar(GoogleDriveUtil.createPhotoUrl(uploadedFile.getId()));
     	return userRepository.save(user);
 	}
 	

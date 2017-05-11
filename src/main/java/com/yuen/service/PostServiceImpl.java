@@ -62,8 +62,8 @@ public class PostServiceImpl implements PostService {
 		post.setFileId(uploadedFile.getId());
 		
 		// Set Google Drive URL of post
-    	if (post.getType().equals("image")) {
-    		post.setUrl(GoogleDriveUtil.createImageUrl(uploadedFile.getId()));
+    	if (post.getType().equals("photo")) {
+    		post.setUrl(GoogleDriveUtil.createPhotoUrl(uploadedFile.getId()));
     	} else {
     		post.setUrl(GoogleDriveUtil.createVideoUrl(uploadedFile.getId()));
     	}

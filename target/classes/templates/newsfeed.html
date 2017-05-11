@@ -62,7 +62,7 @@
 				<span th:text="${post.ago}" class="pull-right post-time" style="line-height: 50px;"></span>
 			</header>
 			
-			<section th:if="${post.type == 'image'}">
+			<section th:if="${post.type == 'photo'}">
 				<img th:src="${post.url}" class="post-img" />
 			</section>
 				

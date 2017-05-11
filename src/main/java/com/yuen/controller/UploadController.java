@@ -24,9 +24,9 @@ public class UploadController {
 	@Autowired
 	private PostService postService;
 	
-	@GetMapping("/upload/image")
-	public String uploadImage() {
-		return "upload_image";
+	@GetMapping("/upload/photo")
+	public String uploadPhoto() {
+		return "upload_photo";
 	}
 	
 	@GetMapping("/upload/video")

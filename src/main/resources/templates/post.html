@@ -9,7 +9,7 @@
 
 	<div class="row post">
 		<div id="post-media" class="col-sm-7">
-			<img th:if="${post.type == 'image'}" th:src="${post.url}" class="img-responsive center-block" />
+			<img th:if="${post.type == 'photo'}" th:src="${post.url}" class="img-responsive center-block" />
 			<iframe th:if="${post.type == 'video'}" th:src="${post.url}" width="100%" height="595px"></iframe>
 		</div>
 		

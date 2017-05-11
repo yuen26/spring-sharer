@@ -22,7 +22,7 @@
 					</li>
 					
 					<li>
-					  <a th:href="@{/upload/image}" class="btn btn-primary">
+					  <a th:href="@{/upload/photo}" class="btn btn-primary">
 					  	Chia sẻ ảnh
 					  </a>
 					</li>
@@ -150,7 +150,7 @@
 	<div th:if="${posts} != null" class="row" style="margin-top:20px;">
 		<div id="posts">
 			<div th:each="post : ${posts}" th:id="'post' + ${post.id}" class="col-sm-4">
-				<div th:if="${post.type == 'image'}" class="thumbnail">
+				<div th:if="${post.type == 'photo'}" class="thumbnail">
 					<img th:src="${post.url}" />
 					<div class="caption">
 						<p class="pull-left">

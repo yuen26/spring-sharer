@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:each="post : ${posts}" th:id="'post' + ${post.id}" class="col-sm-4">
-	<div th:if="${post.type == 'image'}" class="thumbnail">
+	<div th:if="${post.type == 'photo'}" class="thumbnail">
 		<img th:src="${post.url}" />
 		<div class="caption">
 			<p class="pull-left">

@@ -10,7 +10,7 @@ import com.yuen.domain.User;
 import com.yuen.service.UserService;
 
 @Controller
-public class UserManagerController {
+public class MemberManagerController {
 
 	@Autowired
 	private UserService userService;
