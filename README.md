@@ -7,6 +7,7 @@
 - Upload photos and videos which files stored on Google Drive
 - Write, edit, delete, share posts (photo or video) on Facebook
 - Social network basic features as comment, like/unlike, follow/unfollow, notification
+- Admin: block and delete user
 
 ### Technologies:
 
@@ -18,7 +19,7 @@
 - Thymeleaf engine
 
 #### Back-end
-- Spring Framework: Spring Boot, Spring MVC, Spring Data JPA, Spring Social (Facebook)
+- Spring Framework: Spring Boot, Spring MVC, Spring Data JPA, Spring Security, Spring Social (Facebook)
 - Database: MySQL, Hibernate
 - Web Services: Facebook, Google Drive
 - Building tools: Maven
