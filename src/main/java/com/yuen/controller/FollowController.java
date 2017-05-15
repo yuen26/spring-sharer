@@ -31,7 +31,7 @@ public class FollowController {
 	@ResponseBody
 	public String follow(@RequestParam int userId) {
 		// Save relationship
-		User user = userService.findById(userId);
+		User user = userService.findOne(userId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         User currentUser = principal.getUser();
@@ -54,7 +54,7 @@ public class FollowController {
 	@ResponseBody
 	public String unfollow(@RequestParam int userId) {
 		// Delete relationship from DB
-		User user = userService.findById(userId);
+		User user = userService.findOne(userId);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
         User currentUser = principal.getUser();

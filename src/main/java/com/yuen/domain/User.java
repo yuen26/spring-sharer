@@ -62,7 +62,7 @@ public class User implements Serializable {
 		joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, 
 		inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
 	)
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<>();
 	
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)

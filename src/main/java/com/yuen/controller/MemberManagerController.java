@@ -17,7 +17,7 @@ public class MemberManagerController {
 	
 	@GetMapping("/admin/user/{id}/lock")
 	public String lock(@PathVariable("id") Integer id, RedirectAttributes redirect) {
-		User user = userService.findById(id);
+		User user = userService.findOne(id);
 		
 		if (user == null) {
 		    return "404";
@@ -32,7 +32,7 @@ public class MemberManagerController {
 	
 	@GetMapping("/admin/user/{id}/delete")
 	public String delete(@PathVariable("id") Integer id, RedirectAttributes redirect) {
-		User user = userService.findById(id);
+		User user = userService.findOne(id);
 		
 		if (user == null) {
 		    return "404";

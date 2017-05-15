@@ -38,15 +38,14 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public User findById(int id) {
+	public User findOne(int id) {
 		return userRepository.findOne(id);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public User findByUsername(String username) {
-		User user = userRepository.findByUsername(username);
-		return user;
+		return userRepository.findByUsername(username);
 	}
 
 	@Override
@@ -54,10 +53,16 @@ public class UserServiceImpl implements UserService {
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
 	}
-
+	
 	@Override
 	@Transactional
 	public User save(User user) {
+		return userRepository.save(user);
+	}
+
+	@Override
+	@Transactional
+	public User register(User user) {
 		// Insert into DB
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setAvatar(GoogleDriveUtil.createPhotoUrl(Const.DEFAULT_AVATAR_ID));
@@ -71,7 +76,17 @@ public class UserServiceImpl implements UserService {
 		
 		return user;
 	}
-
+	
+	@Override
+	@Transactional
+	public User saveProfile(User user) {
+		// Update DB
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user = userRepository.save(user);
+		
+		return user;
+	}
+	
 	@Override
 	public void delete(User user) {
 		// Delete user in DB

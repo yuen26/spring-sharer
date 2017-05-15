@@ -11,13 +11,17 @@ public interface UserService {
 	
 	List<User> search(String q);
 	
-	User findById(int id);
+	User findOne(int id);
 	
 	User findByUsername(String username);
 	
 	User findByEmail(String email);
 	
 	User save(User user);
+	
+	User register(User user);
+	
+	User saveProfile(User user);
 	
 	void delete(User user);
 	

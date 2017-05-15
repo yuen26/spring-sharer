@@ -67,7 +67,7 @@ public class ProfileController {
 	
 	@GetMapping("/user/more")
     public ModelAndView loadMore(@RequestParam int userId, @RequestParam int page, Model model) {
-        User user = userService.findById(userId);
+        User user = userService.findOne(userId);
         Page<Post> posts = postService.findByUser(user, page, Const.POSTS_PER_PAGE);
         
         if (posts.hasContent()) {
@@ -97,7 +97,7 @@ public class ProfileController {
 			return "change_profile";
 		}
 		
-		userService.save(user);
+		userService.saveProfile(user);
 		sessionStatus.setComplete();
 		
 		return "redirect:/login?logout";

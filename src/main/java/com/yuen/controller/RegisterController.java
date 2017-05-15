@@ -36,7 +36,7 @@ public class RegisterController {
 			return "register";
 		}
 
-		userService.save(user);
+		userService.register(user);
 		
 		redirect.addFlashAttribute("success", "Đăng ký thành công!");
 		return "redirect:/login?register";

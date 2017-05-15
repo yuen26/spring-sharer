@@ -20,12 +20,12 @@ public class Like implements Serializable {
 	private int id;
 
 	//bi-directional many-to-one association to Post
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id", referencedColumnName = "id")
 	private Post post;
 
 	//bi-directional many-to-one association to User
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 

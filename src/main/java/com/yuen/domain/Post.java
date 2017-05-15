@@ -54,7 +54,7 @@ public class Post implements Serializable {
 	private Set<Like> likes = new HashSet<>();
 
 	//bi-directional many-to-one association to User
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id", referencedColumnName = "id")
 	private User user;
 

@@ -118,7 +118,7 @@ public class PostController {
 		
 		postService.delete(post);
 		
-		return "redirect:/";
+		return "redirect:/user/" + post.getUser().getUsername();
 	}
 	
 }

@@ -24,12 +24,12 @@ public class Comment implements Serializable {
 	private Date created;
 
 	//bi-directional many-to-one association to User
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 
 	//bi-directional many-to-one association to Post
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id", referencedColumnName = "id")
 	private Post post;
 
